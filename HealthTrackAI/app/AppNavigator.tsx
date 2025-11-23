@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+//import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { BottomNavBar } from '../components/BottomNavBar';
-import Test from './(tabs)/Test';
+import  Test  from './(tabs)/Test'
 
 const HomeScreen = () => <View style={styles.screen}><Text>Tela Inicial</Text></View>;
 const HistoryScreen = () => <View style={styles.screen}><Text>Tela de Histórico</Text></View>;
@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator();
 export default function AppNavigator() {
   return (
 
-    <NavigationContainer>
+ //   <NavigationContainer>
       <Tab.Navigator
         tabBar={props => <BottomNavBar {...props} />}
         screenOptions={{
@@ -29,7 +29,7 @@ export default function AppNavigator() {
         <Tab.Screen name="IA" component={IAScreen} />
         <Tab.Screen name="Configuracoes" component={SettingsScreen} />
       </Tab.Navigator>
-    </NavigationContainer>
+    //</NavigationContainer>
   );
 }
 
