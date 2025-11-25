@@ -3,11 +3,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BottomNavBar } from '../components/BottomNavBar';
+import  RegistroAtividades from '../app/(tabs)/RegistroAtividades'
 import  Test  from './(tabs)/Test'
 
-const HomeScreen = () => <View style={styles.screen}><Text>Tela Inicial</Text></View>;
+//const HomeScreen = () => <View style={styles.screen}><Text>Tela Inicial</Text></View>;
 const HistoryScreen = () => <View style={styles.screen}><Text>Tela de Histórico</Text></View>;
-const RegisterScreen = () => <View style={styles.screen}><Text>Tela de Registro</Text></View>;
+//const RegisterScreen = () => <View style={styles.screen}><Text>Tela de Registro</Text></View>;
 const IAScreen = () => <View style={styles.screen}><Text>Tela de IA</Text></View>;
 const SettingsScreen = () => <View style={styles.screen}><Text>Tela de Configurações</Text></View>;
 
@@ -25,7 +26,7 @@ export default function AppNavigator() {
       >
         <Tab.Screen name="Home" component={Test} />
         <Tab.Screen name="Historico" component={HistoryScreen} />
-        <Tab.Screen name="Registrar" component={RegisterScreen} />
+        <Tab.Screen name="Registrar" component={RegistroAtividades} />
         <Tab.Screen name="IA" component={IAScreen} />
         <Tab.Screen name="Configuracoes" component={SettingsScreen} />
       </Tab.Navigator>
