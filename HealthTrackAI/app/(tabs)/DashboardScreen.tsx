@@ -102,3 +102,83 @@ return (
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: DASH_COLORS.background,
+  },
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    padding: 16, 
+    paddingBottom: 100,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+    marginTop: 10,
+    paddingHorizontal: 4, 
+  },
+  greeting: {
+    fontSize: 26, 
+    fontWeight: 'bold',
+    color: DASH_COLORS.textDark,
+  },
+  date: {
+    fontSize: 16,
+    color: DASH_COLORS.textLight,
+    marginTop: 4,
+  },
+  profileButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#E0E7FF', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 24,
+  },
+  card: {
+    width: '48%',
+    height: 110,
+  },
+  tipWrapper: {
+    marginTop: 24, 
+    backgroundColor: '#FDE68A', 
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    height: 100, 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center', 
+    shadowColor: "#F59E0B",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  tipContent: {
+    flex: 1,
+    justifyContent: 'center', 
+  },
+  tipTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#92400E', 
+    marginBottom: 4,
+  },
+  tipText: {
+    fontSize: 13,
+    color: '#451A03',
+    lineHeight: 18,
+  },
+});
