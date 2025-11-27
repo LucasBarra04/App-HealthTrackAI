@@ -173,3 +173,12 @@ function SettingsScreen() {
     </View>
   );
 }
+
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <SettingsScreen />
+    </ThemeProvider>
+  );
+}
