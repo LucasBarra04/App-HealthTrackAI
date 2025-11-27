@@ -182,3 +182,42 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  card: {
+    borderRadius: 18,
+    paddingVertical: 10,
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    marginLeft: 10,
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: 52,
+    borderBottomWidth: 1,
+    paddingHorizontal: 14,
+    justifyContent: "space-between",
+  },
+  itemLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  itemLabel: {
+    marginLeft: 12,
+    fontSize: 16,
+  },
+  itemValue: {
+    fontSize: 16,
+  },
+});
