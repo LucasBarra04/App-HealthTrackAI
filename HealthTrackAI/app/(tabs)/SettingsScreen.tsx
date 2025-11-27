@@ -51,3 +51,38 @@ function ThemeProvider({ children }) {
 function useTheme() {
   return useContext(ThemeContext);
 }
+
+
+function SectionTitle({ children }) {
+  const { theme } = useTheme();
+  return (
+    <Text style={[styles.sectionTitle, { color: theme.subtext }]}>
+      {children}
+    </Text>
+  );
+}
+
+function SettingsItem({ icon, label, value, onPress, right }) {
+  const { theme } = useTheme();
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
+      style={[styles.item, { borderColor: theme.divider }]}
+    >
+      <View style={styles.itemLeft}>
+        <Ionicons name={icon} size={22} color={theme.text} />
+        <Text style={[styles.itemLabel, { color: theme.text }]}>{label}</Text>
+      </View>
+
+      {right ? (
+        right
+      ) : value ? (
+        <Text style={[styles.itemValue, { color: theme.subtext }]}>
+          {value}
+        </Text>
+      ) : null}
+    </TouchableOpacity>
+  );
+}
