@@ -30,3 +30,24 @@ const dark = {
   accent: "#0A84FF",
   danger: "#FF6B6B",
 };
+
+function ThemeProvider({ children }) {
+  const [isDark, setIsDark] = useState(false);
+  const toggleTheme = () => setIsDark((prev) => !prev);
+
+  return (
+    <ThemeContext.Provider
+      value={{
+        isDark,
+        toggleTheme,
+        theme: isDark ? dark : light,
+      }}
+    >
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+function useTheme() {
+  return useContext(ThemeContext);
+}
