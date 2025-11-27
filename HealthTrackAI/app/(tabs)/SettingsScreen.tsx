@@ -86,3 +86,90 @@ function SettingsItem({ icon, label, value, onPress, right }) {
     </TouchableOpacity>
   );
 }
+
+
+function SettingsScreen() {
+  const { isDark, toggleTheme, theme } = useTheme();
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
+          <SectionTitle>PREFERÊNCIAS</SectionTitle>
+
+          <SettingsItem
+            icon="moon"
+            label="Tema Escuro"
+            right={
+              <Switch
+                value={isDark}
+                onValueChange={toggleTheme}
+                trackColor={{ true: theme.accent, false: "#999" }}
+                thumbColor="#fff"
+              />
+            }
+          />
+
+          <SettingsItem
+            icon="notifications-outline"
+            label="Notificações"
+            onPress={() => {}}
+            right={
+              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+            }
+          />
+
+          <SettingsItem
+            icon="document-text-outline"
+            label="Unidades"
+            onPress={() => {}}
+            right={
+              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+            }
+          />
+        </View>
+
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
+          <SectionTitle>METAS</SectionTitle>
+
+          <SettingsItem
+            icon="bed-outline"
+            label="Meta de Sono"
+            value="8h"
+            onPress={() => {}}
+            right={
+              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+            }
+          />
+
+          <SettingsItem
+            icon="water-outline"
+            label="Meta de Água"
+            value="2.5L"
+            onPress={() => {}}
+            right={
+              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+            }
+          />
+        </View>
+
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
+          <SectionTitle>DADOS</SectionTitle>
+
+          <SettingsItem
+            icon="download-outline"
+            label="Exportar Histórico"
+            onPress={() => {}}
+          />
+
+          <SettingsItem
+            icon="trash-outline"
+            label="Resetar Dados"
+            onPress={() => {}}
+            right={null}
+          />
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
