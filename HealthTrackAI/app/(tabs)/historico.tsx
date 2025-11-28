@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View, } from "react-native";
+import {
+  Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity,
+  View,
+} from "react-native";
 
 import { LineChart } from "react-native-gifted-charts";
 import { MetricCard } from "../../components/MetricCard";
@@ -31,10 +34,18 @@ const SIMPLE_YEAR = Array.from({ length: 12 }).map((_, i) => ({
   hours: i % 2 !== 0 ? 5 + (i % 4) : undefined,
 }));
 
+interface HistoricoItem {
+  id: number;
+  type: string;
+  date: string;
+  amount?: number;
+  hours?: number;
+}
+
 export default function HistoricoScreen() {
   const { theme } = useTheme();
 
-  const [filtered, setFiltered] = useState<[]>([]);
+  const [filtered, setFiltered] = useState<HistoricoItem[]>([]);
   const [filter, setFilter] = useState<"week" | "month" | "year">("week");
 
   useEffect(() => {
