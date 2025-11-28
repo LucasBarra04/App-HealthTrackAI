@@ -53,6 +53,15 @@ export default function HistoricoScreen() {
     }
   };
 
+  const chartData = filtered.map((item) => ({
+    value: item.amount
+      ? item.amount
+      : item.hours
+      ? item.hours * 100
+      : 0,
+    label: item.date.substring(5, 10),
+  }));
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
