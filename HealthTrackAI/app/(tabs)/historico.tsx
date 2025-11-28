@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {  Dimensions,  ScrollView,  StyleSheet,  Text,  TouchableOpacity,  View,} from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View, } from "react-native";
 
 import { LineChart } from "react-native-gifted-charts";
 import { MetricCard } from "../../components/MetricCard";
@@ -79,9 +79,9 @@ export default function HistoricoScreen() {
         </View>
 
         <View style={styles.chartContainer}>
-          .length > 0 ? (
+          {chartData.length > 0 ? (
             <LineChart
-              data={}
+              data={chartData}
               curved
               thickness={3}
               color={theme.text}
