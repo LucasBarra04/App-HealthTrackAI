@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
 
 interface CardResumoProps {
   icon: string;
@@ -25,40 +26,40 @@ const getIconName = (name: string): keyof typeof Ionicons.glyphMap => {
 };
 
 export const CardResumo = ({ icon, value, goal, progress, color }: CardResumoProps) => {
+  const { theme } = useTheme(); // Hook do tema
   const iconName = getIconName(icon);
-
-  const BLUE_COLOR = '#3B82F6'; 
+  const displayColor = color || theme.primary;
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: theme.card }]}>
       <View style={styles.header}>
         <Ionicons 
           name={iconName} 
           size={24} 
-          color={color} 
+          color={displayColor} 
           style={{ opacity: 0.2, position: 'absolute' }} 
         />
         <Ionicons 
           name={iconName} 
           size={24} 
-          color={color} 
+          color={displayColor} 
         />
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.valueText}>
-          {value} <Text style={styles.goalText}>{goal ? `/ ${goal}` : ''}</Text>
+        <Text style={[styles.valueText, { color: theme.text }]}>
+          {value} <Text style={[styles.goalText, { color: theme.textSecondary }]}>{goal ? `/ ${goal}` : ''}</Text>
         </Text>
       </View>
 
       {progress !== undefined && (
-        <View style={styles.progressTrack}>
+        <View style={[styles.progressTrack, { backgroundColor: theme.background }]}>
           <View 
             style={[
               styles.progressBar, 
               { 
                 width: `${Math.min(progress * 100, 100)}%`, 
-                backgroundColor: BLUE_COLOR 
+                backgroundColor: displayColor 
               }
             ]} 
           />
@@ -70,7 +71,6 @@ export const CardResumo = ({ icon, value, goal, progress, color }: CardResumoPro
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.card,
     borderRadius: 16,
     padding: 16,
     width: '48%',
@@ -92,19 +92,14 @@ const styles = StyleSheet.create({
   valueText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.text,
   },
   goalText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     fontWeight: 'normal',
   },
   progressTrack: {
     height: 6,
-    backgroundColor: COLORS.background, 
     borderRadius: 3,
-    borderWidth: 1,
-    borderColor: 'gray',
     overflow: 'hidden',
   },
   progressBar: {
