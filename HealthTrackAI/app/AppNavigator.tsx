@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, Platform } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 import { BottomNavBar } from '../components/BottomNavBar';
 import RegistroAtividades from '../app/(tabs)/RegistroAtividades';
-import Test from './(tabs)/Test';
+import DashboardScreen from './(tabs)/DashboardScreen';
 
 //const HomeScreen = () => <View style={styles.screen}><Text>Tela Inicial</Text></View>;
 const HistoryScreen = () => <View style={styles.screen}><Text>Tela de Histórico</Text></View>;
@@ -32,7 +32,7 @@ export default function AppNavigator() {
           headerShown: false,
         }}
       >
-        <Tab.Screen name="Home" component={Test} />
+        <Tab.Screen name="Home" component={DashboardScreen} />
         <Tab.Screen name="Historico" component={HistoryScreen} />
         <Tab.Screen name="Registrar" component={RegistroAtividades} />
         <Tab.Screen name="IA" component={IAScreen} />
