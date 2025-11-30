@@ -1,36 +1,35 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CardResumo } from '../../components/CardResumo';
 import { useAuth } from '../AuthContext';
-
-const DASH_COLORS = {
-  sleep: '#5C6BC0',
-  water: '#42A5F5',
-  humor: '#FFB74D',
-  activity: '#78909C',
-  textDark: '#1A1A1A',
-  textLight: '#6E7A8A',
-  background: '#F9FAFB',
-};
+import { useTheme } from '../../context/ThemeContext';
+import { useData } from '../../context/DataContext';
 
 const capitalizeFirstLetter = (string: string | null) => {
   if (!string) return 'Usuário';
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export default function DashboardScreen() {
-  const { user } = useAuth(); 
+const getFormattedDate = () => {
+  const now = new Date();
+  const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'short' };
+  return now.toLocaleDateString('pt-BR', options).replace('.', '');
+};
 
-  const [dados] = useState({
-    sono: { feito: 6.5, meta: 8 },
-    agua: { feito: 1.8, meta: 2.5 },
-    humor: { nota: 4, max: 5 }, 
-    atividade: { tipo: 'Caminhada', intensidade: 'leve' }
-  });
-return (
-    <SafeAreaView style={styles.safeArea}>
+export default function DashboardScreen() {
+  const { user } = useAuth();
+  const { theme } = useTheme();
+  const { todayData } = useData();
+
+  const METAS = { sono: 8, agua: 2.5 };
+
+  const humorDisplay = todayData.mood !== null ? todayData.mood + 1 : 0;
+  const temAtividade = todayData.activity.length > 0;
+
+  return (
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <ScrollView 
         style={styles.container} 
         contentContainerStyle={styles.contentContainer}
@@ -39,61 +38,57 @@ return (
         
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Olá, {capitalizeFirstLetter(user)}!</Text>
-            <Text style={styles.date}>Sexta, 22 Nov</Text>
+            <Text style={[styles.greeting, { color: theme.text }]}>Olá, {capitalizeFirstLetter(user)}!</Text>
+            <Text style={[styles.date, { color: theme.textSecondary }]}>{getFormattedDate()}</Text>
           </View>
-          <TouchableOpacity style={styles.profileButton}>
-             <Ionicons name="person" size={20} color="#FFF" />
+          <TouchableOpacity style={[styles.profileButton, { backgroundColor: theme.card }]}>
+             <Ionicons name="person" size={20} color={theme.primary} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.gridContainer}>
           
           <CardResumo
-            style={styles.card}
             icon='moon'
-            value={`${dados.sono.feito}h`}
-            goal={`${dados.sono.meta}h`}
-            progress={dados.sono.feito / dados.sono.meta} 
-            color={DASH_COLORS.sleep} 
+            value={`${todayData.sleep}h`}
+            goal={`${METAS.sono}h`}
+            progress={todayData.sleep / METAS.sono} 
+            color="#5C6BC0" 
           />
 
           <CardResumo
-            style={styles.card}
             icon='water'
-            value={`${dados.agua.feito}L`}
-            goal={`${dados.agua.meta}L`}
-            progress={dados.agua.feito / dados.agua.meta}
-            color={DASH_COLORS.water}
+            value={`${todayData.water}L`}
+            goal={`${METAS.agua}L`}
+            progress={todayData.water / METAS.agua}
+            color="#42A5F5" 
           />
 
           <CardResumo
-            style={styles.card}
             icon='happy'
-            value={`${dados.humor.nota}/5`}
+            value={humorDisplay > 0 ? `${humorDisplay}/5` : '-'}
             goal="" 
-            progress={dados.humor.nota / 5}
-            color={DASH_COLORS.humor}
+            progress={humorDisplay / 5}
+            color="#FFB74D" 
           />
 
           <CardResumo
-            style={styles.card}
             icon='walk'
-            value={`${dados.atividade.tipo} ${dados.atividade.intensidade}`}
+            value={temAtividade ? todayData.activity : 'Nenhuma'}
             goal={null} 
-            progress={1}
-            color={DASH_COLORS.activity}
+            progress={temAtividade ? 1 : 0}
+            color="#78909C" 
           />
 
         </View>
 
-        <View style={styles.tipWrapper}>
+        <View style={[styles.tipWrapper, { backgroundColor: '#FDE68A', shadowColor: "#F59E0B" }]}>
             <View style={styles.tipContent}>
                 <Text style={styles.tipTitle}>
                     Dica do Dia <Ionicons name="sparkles" size={16} color="#F59E0B" />
                 </Text>
                 <Text style={styles.tipText} numberOfLines={2}>
-                    Você está no caminho certo! Continue assim.
+                    Mantenha a consistência! Pequenos passos levam a grandes mudanças.
                 </Text>
             </View>
         </View>
@@ -106,7 +101,6 @@ return (
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: DASH_COLORS.background,
   },
   container: {
     flex: 1,
@@ -126,41 +120,33 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 26, 
     fontWeight: 'bold',
-    color: DASH_COLORS.textDark,
   },
   date: {
     fontSize: 16,
-    color: DASH_COLORS.textLight,
     marginTop: 4,
   },
   profileButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#E0E7FF', 
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 2,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 24,
-  },
-  card: {
-    width: '48%',
-    height: 110,
+    rowGap: 16,
   },
   tipWrapper: {
     marginTop: 24, 
-    backgroundColor: '#FDE68A', 
     borderRadius: 20,
     paddingHorizontal: 20,
     height: 100, 
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center', 
-    shadowColor: "#F59E0B",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 10,

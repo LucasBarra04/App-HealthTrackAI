@@ -1,31 +1,37 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { InputHabito } from '../../components/InputHabito';
-import { COLORS } from '../../constants/theme'
+import { useTheme } from '../../context/ThemeContext';
+import { useData } from '../../context/DataContext';
 
 export default function RegistroAtividades() {
-  const [horasDormidas, setHorasDormidas] = useState(0);
-  const [litrosBebidos, setLitrosBebidos] = useState(0);
-  const [humor, setHumor] = useState(null);
-  const [atividade, setAtividade] = useState('');
+  const { theme } = useTheme();
+  const { todayData, updateTodayData, saveData } = useData();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSave = () => {
+    saveData();
+    setModalVisible(true);
+    setTimeout(() => setModalVisible(false), 2000);
+  };
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.contentContainer}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={[styles.contentContainer, { backgroundColor: theme.card }]}>
 
-        <Text style={styles.title}>Registrar Hábitos</Text>
+          <Text style={[styles.title, { color: theme.text }]}>Registrar Hábitos</Text>
         
           <InputHabito
             type="slider"
             label="Sono"
             icon="moon"
             unit="h"
-            min={4}
+            min={0}
             max={12}
-            value={horasDormidas}
-            onChange={setHorasDormidas}
+            value={todayData.sleep}
+            onChange={(val) => updateTodayData({ sleep: val })}
           />
 
           <InputHabito
@@ -35,43 +41,61 @@ export default function RegistroAtividades() {
             unit="L"
             min={0}
             max={5}
-            value={litrosBebidos}
-            onChange={setLitrosBebidos}
+            value={todayData.water}
+            onChange={(val) => updateTodayData({ water: val })}
           />
 
           <InputHabito
             type="emoji-picker"
             label="Humor"
             icon="happy"
-            value={humor}
-            onChange={(novoValor) => setHumor(novoValor)}
+            value={todayData.mood}
+            onChange={(val) => updateTodayData({ mood: val })}
           />
 
-  
           <View style={styles.inputGroup}>
             <View style={styles.labelRow}>
-              <Ionicons name="walk" size={24} color={COLORS.text} />
-              <Text style={styles.labelText}>Atividade Física</Text>
+              <Ionicons name="walk" size={24} color={theme.text} />
+              <Text style={[styles.labelText, { color: theme.text }]}>Atividade Física</Text>
             </View>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { 
+                borderColor: theme.border, 
+                color: theme.text, 
+                backgroundColor: theme.background 
+              }]}
               placeholder="Ex: Corrida matinal"
-              placeholderTextColor={COLORS.textSecondary}
-              value={atividade}
-              onChangeText={setAtividade}
+              placeholderTextColor={theme.textSecondary}
+              value={todayData.activity}
+              onChangeText={(text) => updateTodayData({ activity: text })}
             />
           </View>
 
           <TouchableOpacity 
-            style={styles.button} 
+            style={[styles.button, { backgroundColor: theme.primary }]} 
             activeOpacity={0.8}
-            onPress={() => console.log("Salvo!", { horasDormidas, litrosBebidos, humor, atividade })}
+            onPress={handleSave}
           >
             <Text style={styles.buttonText}>Salvar Registro</Text>
           </TouchableOpacity>
 
         </View>
       </ScrollView>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalView, { backgroundColor: theme.card }]}>
+            <Ionicons name="checkmark-circle" size={50} color={theme.success} />
+            <Text style={[styles.modalText, { color: theme.text }]}>Dados salvos com sucesso!</Text>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 }
@@ -79,15 +103,14 @@ export default function RegistroAtividades() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 100,
   },
   contentContainer: {
-    backgroundColor: COLORS.card,
     borderRadius: 24,
     padding: 24,
     width: '90%',
@@ -99,10 +122,10 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   title: {
-      fontSize: 30,
+      fontSize: 24,
       alignSelf: 'center',
-      paddingTop: 20,
-      paddingBottom: 20,
+      paddingTop: 10,
+      paddingBottom: 30,
       fontWeight: 'bold',
   },
   inputGroup: {
@@ -118,26 +141,20 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.text,
     marginLeft: 8,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: COLORS.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
-    color: COLORS.text,
-    backgroundColor: '#FFFFFF',
   },
   button: {
-    backgroundColor: COLORS.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 32,
-    shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -148,6 +165,29 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-
-
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    margin: 20,
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 10,
+  },
 });
