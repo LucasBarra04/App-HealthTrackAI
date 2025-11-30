@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -8,68 +8,25 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../../context/ThemeContext";
 
-const ThemeContext = createContext();
-
-const light = {
-  background: "#F7F7F7",
-  card: "#FFFFFF",
-  text: "#1A1A1A",
-  subtext: "#777",
-  divider: "#E0E0E0",
-  accent: "#007AFF",
-  danger: "#D64545",
-};
-
-const dark = {
-  background: "#121212",
-  card: "#1E1E1E",
-  text: "#FFFFFF",
-  subtext: "#A8A8A8",
-  divider: "#333",
-  accent: "#0A84FF",
-  danger: "#FF6B6B",
-};
-
-function ThemeProvider({ children }) {
-  const [isDark, setIsDark] = useState(false);
-  const toggleTheme = () => setIsDark((prev) => !prev);
-
-  return (
-    <ThemeContext.Provider
-      value={{
-        isDark,
-        toggleTheme,
-        theme: isDark ? dark : light,
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
-  );
-}
-
-function useTheme() {
-  return useContext(ThemeContext);
-}
-
-
-function SectionTitle({ children }) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
   return (
-    <Text style={[styles.sectionTitle, { color: theme.subtext }]}>
+    <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
       {children}
     </Text>
   );
 }
 
-function SettingsItem({ icon, label, value, onPress, right }) {
+function SettingsItem({ icon, label, value, onPress, right }: any) {
   const { theme } = useTheme();
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
-      style={[styles.item, { borderColor: theme.divider }]}
+      style={[styles.item, { borderColor: theme.border }]}
     >
       <View style={styles.itemLeft}>
         <Ionicons name={icon} size={22} color={theme.text} />
@@ -79,7 +36,7 @@ function SettingsItem({ icon, label, value, onPress, right }) {
       {right ? (
         right
       ) : value ? (
-        <Text style={[styles.itemValue, { color: theme.subtext }]}>
+        <Text style={[styles.itemValue, { color: theme.textSecondary }]}>
           {value}
         </Text>
       ) : null}
@@ -87,13 +44,13 @@ function SettingsItem({ icon, label, value, onPress, right }) {
   );
 }
 
-
-function SettingsScreen() {
+export default function SettingsScreen() {
   const { isDark, toggleTheme, theme } = useTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <SectionTitle>PREFERÊNCIAS</SectionTitle>
 
@@ -104,8 +61,8 @@ function SettingsScreen() {
               <Switch
                 value={isDark}
                 onValueChange={toggleTheme}
-                trackColor={{ true: theme.accent, false: "#999" }}
-                thumbColor="#fff"
+                trackColor={{ true: theme.primary, false: "#E9E9EA" }}
+                thumbColor="#FFFFFF"
               />
             }
           />
@@ -115,7 +72,7 @@ function SettingsScreen() {
             label="Notificações"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
             }
           />
 
@@ -124,7 +81,7 @@ function SettingsScreen() {
             label="Unidades"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
             }
           />
         </View>
@@ -138,7 +95,7 @@ function SettingsScreen() {
             value="8h"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
             }
           />
 
@@ -148,7 +105,7 @@ function SettingsScreen() {
             value="2.5L"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.subtext} />
+              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
             }
           />
         </View>
@@ -159,30 +116,22 @@ function SettingsScreen() {
           <SettingsItem
             icon="download-outline"
             label="Exportar Histórico"
-            onPress={() => {}}
+            onPress={() => console.log("Exportar dados...")}
+            right={<Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />}
           />
 
           <SettingsItem
             icon="trash-outline"
             label="Resetar Dados"
-            onPress={() => {}}
-            right={null}
+            onPress={() => console.log("Resetar dados...")}
+            right={<Ionicons name="alert-circle-outline" size={20} color="#EF4444" />}
           />
         </View>
+
       </ScrollView>
     </View>
   );
 }
-
-
-export default function App() {
-  return (
-    <ThemeProvider>
-      <SettingsScreen />
-    </ThemeProvider>
-  );
-}
-
 
 const styles = StyleSheet.create({
   container: {
@@ -193,20 +142,27 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     paddingVertical: 10,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "700",
-    marginLeft: 10,
-    marginBottom: 10,
-    marginTop: 10,
+    marginLeft: 16,
+    marginBottom: 8,
+    marginTop: 8,
+    opacity: 0.8,
+    letterSpacing: 0.5,
   },
   item: {
     flexDirection: "row",
     alignItems: "center",
     height: 52,
     borderBottomWidth: 1,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     justifyContent: "space-between",
   },
   itemLeft: {
