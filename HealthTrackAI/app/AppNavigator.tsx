@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BottomNavBar } from '../components/BottomNavBar';
-import  Test  from './(tabs)/Test'
+import DashboardScreen from './(tabs)/DashboardScreen';
 
 const HomeScreen = () => <View style={styles.screen}><Text>Tela Inicial</Text></View>;
 const HistoryScreen = () => <View style={styles.screen}><Text>Tela de Histórico</Text></View>;
@@ -23,7 +23,7 @@ export default function AppNavigator() {
           headerShown: false,
         }}
       >
-        <Tab.Screen name="Home" component={Test} />
+        <Tab.Screen name="Home" component={DashboardScreen} />
         <Tab.Screen name="Historico" component={HistoryScreen} />
         <Tab.Screen name="Registrar" component={RegisterScreen} />
         <Tab.Screen name="IA" component={IAScreen} />
