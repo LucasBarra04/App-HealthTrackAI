@@ -4,6 +4,8 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 import { BottomNavBar } from '../components/BottomNavBar';
+import  Test  from './(tabs)/Test'
+import SettingsScreen from './(tabs)/SettingsScreen'
 import RegistroAtividades from '../app/(tabs)/RegistroAtividades';
 import DashboardScreen from './(tabs)/DashboardScreen';
 
@@ -11,7 +13,7 @@ import DashboardScreen from './(tabs)/DashboardScreen';
 const HistoryScreen = () => <View style={styles.screen}><Text>Tela de Histórico</Text></View>;
 //const RegisterScreen = () => <View style={styles.screen}><Text>Tela de Registro</Text></View>;
 const IAScreen = () => <View style={styles.screen}><Text>Tela de IA</Text></View>;
-const SettingsScreen = () => <View style={styles.screen}><Text>Tela de Configurações</Text></View>;
+//const SettingsScreen = () => <View style={styles.screen}><Text>Tela de Configurações</Text></View>;
 
 const Tab = createBottomTabNavigator();
 
