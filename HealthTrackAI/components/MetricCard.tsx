@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
 
 interface MetricCardProps {
   title: string;
@@ -10,20 +10,22 @@ interface MetricCardProps {
 }
 
 export const MetricCard = ({ title, value, trend }: MetricCardProps) => {
+  const { theme } = useTheme();
+
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>{title}</Text>
+    <View style={[styles.card, { backgroundColor: theme.card }]}>
+      <Text style={[styles.title, { color: theme.textSecondary }]}>{title}</Text>
       
       {trend ? (
         <View style={styles.trendContainer}>
           {trend === 'up' ? (
-            <Ionicons name="trending-up" size={32} color={COLORS.success} />
+            <Ionicons name="trending-up" size={32} color={theme.success} />
           ) : (
-            <Ionicons name="trending-down" size={32} color={COLORS.accent} />
+            <Ionicons name="trending-down" size={32} color={theme.accent} />
           )}
         </View>
       ) : (
-        <Text style={styles.value}>{value}</Text>
+        <Text style={[styles.value, { color: theme.text }]}>{value}</Text>
       )}
     </View>
   );
@@ -31,7 +33,6 @@ export const MetricCard = ({ title, value, trend }: MetricCardProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.card,
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
@@ -45,15 +46,13 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   title: {
-    fontSize:  17,
-    color: COLORS.textSecondary,
+    fontSize: 12,
     marginBottom: 8,
     textAlign: 'center',
   },
   value: {
-    fontSize: 18,
+    fontSize: 16, 
     fontWeight: 'bold',
-    color: COLORS.text,
     textAlign: 'center',
   },
   trendContainer: {

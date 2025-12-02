@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
 
 interface InputHabitoProps {
   type: 'slider' | 'emoji-picker' | 'text-input' | 'search-input';
@@ -17,6 +17,7 @@ interface InputHabitoProps {
 }
 
 export const InputHabito = ({ type, label, icon, value, onChange, min, max, unit, placeholder }: InputHabitoProps) => {
+  const { theme } = useTheme();
 
   const getIcon = () => {
     let iconName: keyof typeof Ionicons.glyphMap = 'help-circle';
@@ -33,7 +34,7 @@ export const InputHabito = ({ type, label, icon, value, onChange, min, max, unit
       default: iconName = 'ellipse';
     }
 
-    return <Ionicons name={iconName} size={24} color={COLORS.text} />;
+    return <Ionicons name={iconName} size={24} color={theme.text} />;
   };
 
   const formatValue = (val: any) => {
@@ -48,11 +49,10 @@ export const InputHabito = ({ type, label, icon, value, onChange, min, max, unit
       <View style={styles.headerRow}>
         <View style={styles.labelContainer}>
           {getIcon()}
-          <Text style={styles.label}>{label}</Text>
+          <Text style={[styles.label, { color: theme.text }]}>{label}</Text>
         </View>
         {type === 'slider' && (
-          <Text style={styles.valueDisplay}>
-            {/* APLICA A FORMATAÇÃO AQUI */}
+          <Text style={[styles.valueDisplay, { color: theme.textSecondary }]}>
             {formatValue(value)} {unit}
           </Text>
         )}
@@ -66,9 +66,9 @@ export const InputHabito = ({ type, label, icon, value, onChange, min, max, unit
           step={0.1} 
           value={Number(value) || 0} 
           onValueChange={onChange} 
-          minimumTrackTintColor={COLORS.primary}
-          maximumTrackTintColor={COLORS.border}
-          thumbTintColor={COLORS.card} 
+          minimumTrackTintColor={theme.primary}
+          maximumTrackTintColor={theme.border}
+          thumbTintColor={theme.card}
         />
       )}
 
@@ -86,11 +86,15 @@ export const InputHabito = ({ type, label, icon, value, onChange, min, max, unit
 
       {(type === 'text-input' || type === 'search-input') && (
         <TextInput
-          style={styles.input}
+          style={[styles.input, { 
+            backgroundColor: theme.background, 
+            borderColor: theme.border, 
+            color: theme.text 
+          }]}
           value={value}
           onChangeText={onChange}
           placeholder={placeholder}
-          placeholderTextColor={COLORS.textSecondary}
+          placeholderTextColor={theme.textSecondary}
         />
       )}
     </View>
@@ -101,10 +105,10 @@ const styles = StyleSheet.create({
   container: { marginBottom: 24 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   labelContainer: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  label: { fontSize: 18, fontWeight: '500', color: COLORS.text },
-  valueDisplay: { fontSize: 16, color: COLORS.textSecondary, fontVariant: ['tabular-nums'] }, // tabular-nums evita que o texto pule
+  label: { fontSize: 18, fontWeight: '500' },
+  valueDisplay: { fontSize: 16, fontVariant: ['tabular-nums'] },
   emojiContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 8 },
   emoji: { fontSize: 32, opacity: 0.4 },
   emojiSelected: { opacity: 1, transform: [{ scale: 1.2 }] },
-  input: { borderWidth: 1, borderColor: COLORS.border, borderRadius: 12, padding: 14, fontSize: 16, color: COLORS.text, backgroundColor: COLORS.card }
+  input: { borderWidth: 1, borderRadius: 12, padding: 14, fontSize: 16 }
 });

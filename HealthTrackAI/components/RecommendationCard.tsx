@@ -1,7 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
 
 interface RecommendationCardProps {
   icon: string;
@@ -11,26 +9,21 @@ interface RecommendationCardProps {
 }
 
 export const RecommendationCard = ({ icon, text, actionLabel, onAction }: RecommendationCardProps) => {
-  const [isApplied, setIsApplied] = useState(false);
-
-  const handlePress = () => {
-    setIsApplied(!isApplied);
-    onAction();
-  };
+  const { theme } = useTheme();
 
   const getIcon = () => {
     let iconName: keyof typeof Ionicons.glyphMap = 'bulb';
     let bgColor = '#FEF3C7';
-    let iconColor = COLORS.accent;
+    let iconColor = theme.accent;
 
     if (icon === 'moon') {
       iconName = 'moon';
       bgColor = '#E0E7FF';
-      iconColor = COLORS.primary;
+      iconColor = theme.primary;
     } else if (icon === 'droplet' || icon === 'water') {
       iconName = 'water';
       bgColor = '#D1FAE5';
-      iconColor = COLORS.success;
+      iconColor = theme.success;
     } else if (icon === 'meditation' || icon === 'body') {
       iconName = 'body';
       bgColor = '#F3E8FF';
@@ -45,26 +38,17 @@ export const RecommendationCard = ({ icon, text, actionLabel, onAction }: Recomm
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.card }]}>
       <View style={styles.leftContent}>
         {getIcon()}
-        <Text style={styles.text}>{text}</Text>
+        <Text style={[styles.text, { color: theme.text }]}>{text}</Text>
       </View>
-
-      <TouchableOpacity
-        style={[
-          styles.button,
-          isApplied ? styles.buttonApplied : styles.buttonDefault
-        ]}
-        onPress={handlePress}
-        activeOpacity={0.7}
+      
+      <TouchableOpacity 
+        style={[styles.button, { backgroundColor: theme.background }]} 
+        onPress={onAction}
       >
-        <Text style={[
-          styles.buttonText,
-          isApplied ? styles.buttonTextApplied : styles.buttonTextDefault
-        ]}>
-          {isApplied ? 'Ativo' : actionLabel}
-        </Text>
+        <Text style={[styles.buttonText, { color: theme.text }]}>{actionLabel}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -72,7 +56,6 @@ export const RecommendationCard = ({ icon, text, actionLabel, onAction }: Recomm
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.card,
     padding: 16,
     borderRadius: 16,
     flexDirection: 'row',
@@ -101,7 +84,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    color: COLORS.text,
     flex: 1,
     flexWrap: 'wrap',
     fontWeight: '500',
