@@ -1,5 +1,3 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
@@ -51,7 +49,7 @@ export const BottomNavBar = ({ state, descriptors, navigation }) => {
             
             {!isMiddleButton && (
               <Text style={[styles.label, { color: iconColor }]}>
-                {label}
+                {typeof label === 'string' ? label : route.name}
               </Text>
             )}
           </TouchableOpacity>

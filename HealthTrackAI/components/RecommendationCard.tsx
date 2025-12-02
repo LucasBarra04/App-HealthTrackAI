@@ -1,5 +1,3 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
@@ -27,9 +25,9 @@ export const RecommendationCard = ({ icon, text, actionLabel, onAction }: Recomm
       bgColor = '#D1FAE5';
       iconColor = theme.success;
     } else if (icon === 'meditation' || icon === 'body') {
-      iconName = 'body'; 
-      bgColor = '#F3E8FF'; 
-      iconColor = '#8B5CF6'; 
+      iconName = 'body';
+      bgColor = '#F3E8FF';
+      iconColor = '#8B5CF6';
     }
 
     return (
@@ -88,14 +86,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     flex: 1,
     flexWrap: 'wrap',
+    fontWeight: '500',
   },
   button: {
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
+    minWidth: 80,
+    alignItems: 'center',
+  },
+  buttonDefault: {
+    backgroundColor: '#F3F4F6',
+  },
+  buttonApplied: {
+    backgroundColor: '#DCFCE7',
+    borderWidth: 1,
+    borderColor: COLORS.success,
   },
   buttonText: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  buttonTextDefault: {
+    color: COLORS.text,
+  },
+  buttonTextApplied: {
+    color: COLORS.success,
   }
 });
