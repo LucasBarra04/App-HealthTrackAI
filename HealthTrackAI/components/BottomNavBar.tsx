@@ -65,7 +65,7 @@ export const BottomNavBar = ({ state, descriptors, navigation }: BottomTabBarPro
             
             {!isMiddleButton && (
               <Text style={[styles.label, { color: iconColor }]}>
-                {label}
+                {typeof label === 'string' ? label : route.name}
               </Text>
             )}
           </TouchableOpacity>
