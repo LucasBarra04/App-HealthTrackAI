@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { useEffect } from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 import { ThemeProvider } from '../context/ThemeContext';
 import { DataProvider } from '../context/DataContext';

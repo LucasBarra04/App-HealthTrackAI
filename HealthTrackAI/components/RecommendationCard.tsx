@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
@@ -10,6 +12,12 @@ interface RecommendationCardProps {
 
 export const RecommendationCard = ({ icon, text, actionLabel, onAction }: RecommendationCardProps) => {
   const { theme } = useTheme();
+  const [isActive, setIsActive] = useState(false); 
+
+  const handlePress = () => {
+    setIsActive(!isActive); 
+    onAction(); 
+  };
 
   const getIcon = () => {
     let iconName: keyof typeof Ionicons.glyphMap = 'bulb';
@@ -45,10 +53,19 @@ export const RecommendationCard = ({ icon, text, actionLabel, onAction }: Recomm
       </View>
       
       <TouchableOpacity 
-        style={[styles.button, { backgroundColor: theme.background }]} 
-        onPress={onAction}
+        style={[
+          styles.button, 
+          { backgroundColor: isActive ? theme.success : theme.background } 
+        ]} 
+        onPress={handlePress}
+        activeOpacity={0.7}
       >
-        <Text style={[styles.buttonText, { color: theme.text }]}>{actionLabel}</Text>
+        <Text style={[
+          styles.buttonText, 
+          { color: isActive ? '#FFFFFF' : theme.text } 
+        ]}>
+          {isActive ? 'Ativo' : actionLabel} 
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -95,22 +112,8 @@ const styles = StyleSheet.create({
     minWidth: 80,
     alignItems: 'center',
   },
-  buttonDefault: {
-    backgroundColor: '#F3F4F6',
-  },
-  buttonApplied: {
-    backgroundColor: '#DCFCE7',
-    borderWidth: 1,
-    borderColor: COLORS.success,
-  },
   buttonText: {
     fontSize: 12,
     fontWeight: '600',
-  },
-  buttonTextDefault: {
-    color: COLORS.text,
-  },
-  buttonTextApplied: {
-    color: COLORS.success,
   }
 });

@@ -3,20 +3,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RecommendationCard } from '../../components/RecommendationCard';
-import { COLORS } from '../../constants/theme';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function RecomendacoesIA() {
+  const { theme } = useTheme();
   const [mostrarDicas, setMostrarDicas] = useState(false);
 
   const textoAnaliseSemanal = "Você melhorou seu sono em 1% esta semana. Continue assim! Sua hidratação precisa de atenção.";
-
   const textoExplicacao = "Manter a consistência em pequenos hábitos gera grandes resultados na saúde a longo prazo.\n\n• O sono regular melhora a função cognitiva e o humor.\n• A hidratação adequada é vital para a energia e digestão.\n• Pausas para meditação reduzem o cortisol (estresse).";
 
   return (
-    <View style={styles.screenContainer}>
+    <View style={[styles.screenContainer, { backgroundColor: theme.background }]}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        <Text style={styles.headerTitle}>Recomendações IA</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>Recomendações IA</Text>
 
         <LinearGradient
           colors={['#4F46E5', '#7C3AED']} 
@@ -31,7 +31,7 @@ export default function RecomendacoesIA() {
         </LinearGradient>
 
         <View style={styles.recommendationList}>
-          
+      
           <RecommendationCard
             icon="moon"
             text="Tente dormir às 22h hoje"
@@ -52,29 +52,28 @@ export default function RecomendacoesIA() {
             actionLabel="Aplicar"
             onAction={() => console.log('Meditação aplicada')}
           />
-
         </View>
 
-        <View style={styles.accordionContainer}>
+        <View style={[styles.accordionContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
           <TouchableOpacity 
             style={styles.accordionHeader} 
             activeOpacity={0.7}
             onPress={() => setMostrarDicas(!mostrarDicas)}
           >
             <View style={styles.footerContent}>
-              <Ionicons name="information-circle-outline" size={24} color={COLORS.textSecondary} />
-              <Text style={styles.footerText}>Por que isso importa?</Text>
+              <Ionicons name="information-circle-outline" size={24} color={theme.textSecondary} />
+              <Text style={[styles.footerText, { color: theme.text }]}>Por que isso importa?</Text>
             </View>
             <Ionicons 
               name={mostrarDicas ? "chevron-up" : "chevron-down"} 
               size={20} 
-              color={COLORS.textSecondary} 
+              color={theme.textSecondary} 
             />
           </TouchableOpacity>
           
           {mostrarDicas && (
-            <View style={styles.accordionBody}>
-              <Text style={styles.accordionText}>
+            <View style={[styles.accordionBody, { borderTopColor: theme.border }]}>
+              <Text style={[styles.accordionText, { color: theme.textSecondary }]}>
                 {textoExplicacao}
               </Text>
             </View>
@@ -89,7 +88,6 @@ export default function RecomendacoesIA() {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
     paddingTop: 60, 
   },
   scrollContent: {
@@ -99,7 +97,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#111827',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -128,11 +125,9 @@ const styles = StyleSheet.create({
     gap: 4, 
   },
   accordionContainer: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     marginTop: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     overflow: 'hidden',
   },
   accordionHeader: {
@@ -145,11 +140,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
   },
   accordionText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     lineHeight: 22,
     marginTop: 12,
   },
@@ -160,7 +153,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 16,
-    color: '#374151',
     fontWeight: '500',
   }
 });
