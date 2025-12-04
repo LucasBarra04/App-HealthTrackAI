@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native'; 
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
-export const BottomNavBar = ({ state, descriptors, navigation }: any) => {
+export const BottomNavBar = ({ state, descriptors, navigation }) => {
   const { theme } = useTheme();
 
   return (
@@ -11,7 +11,7 @@ export const BottomNavBar = ({ state, descriptors, navigation }: any) => {
       backgroundColor: theme.navBackground, 
       borderTopColor: theme.border 
     }]}>
-      {state.routes.map((route: any, index: number) => {
+      {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel !== undefined ? options.tabBarLabel : route.name;
         const isFocused = state.index === index;
@@ -40,7 +40,6 @@ export const BottomNavBar = ({ state, descriptors, navigation }: any) => {
             key={index}
             onPress={onPress}
             style={styles.tabButton}
-            activeOpacity={0.7}
           >
             {isMiddleButton ? (
               <View style={[styles.middleButtonContainer, { backgroundColor: theme.primary, shadowColor: theme.primary }]}>
@@ -52,7 +51,7 @@ export const BottomNavBar = ({ state, descriptors, navigation }: any) => {
             
             {!isMiddleButton && (
               <Text style={[styles.label, { color: iconColor }]}>
-                {typeof label === 'string' ? label : route.name}
+                {label}
               </Text>
             )}
           </TouchableOpacity>
@@ -65,8 +64,8 @@ export const BottomNavBar = ({ state, descriptors, navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: Platform.OS === 'ios' ? 90 : 70, 
-    paddingBottom: Platform.OS === 'ios' ? 25 : 12,
+    height: Platform.OS === 'ios' ? 85 : 65,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
     paddingTop: 10,
     borderTopWidth: 1,
     elevation: 10,
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    marginTop: 6,
+    marginTop: 4,
     fontWeight: '500',
   },
   middleButtonContainer: {
@@ -89,7 +88,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 25,
+    marginBottom: 20,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,

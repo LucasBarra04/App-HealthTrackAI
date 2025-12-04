@@ -1,4 +1,5 @@
 export async function gerarDicasIA(dados: any) {
+const API_KEY ="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";
 
   const prompt = `
 Você é um assistente de saúde. Com base nos dados abaixo, gere:

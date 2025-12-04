@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 interface RecommendationCardProps {
@@ -12,12 +11,6 @@ interface RecommendationCardProps {
 
 export const RecommendationCard = ({ icon, text, actionLabel, onAction }: RecommendationCardProps) => {
   const { theme } = useTheme();
-  const [isActive, setIsActive] = useState(false); 
-
-  const handlePress = () => {
-    setIsActive(!isActive); 
-    onAction(); 
-  };
 
   const getIcon = () => {
     let iconName: keyof typeof Ionicons.glyphMap = 'bulb';
@@ -33,9 +26,9 @@ export const RecommendationCard = ({ icon, text, actionLabel, onAction }: Recomm
       bgColor = '#D1FAE5';
       iconColor = theme.success;
     } else if (icon === 'meditation' || icon === 'body') {
-      iconName = 'body';
-      bgColor = '#F3E8FF';
-      iconColor = '#8B5CF6';
+      iconName = 'body'; 
+      bgColor = '#F3E8FF'; 
+      iconColor = '#8B5CF6'; 
     }
 
     return (
@@ -53,19 +46,10 @@ export const RecommendationCard = ({ icon, text, actionLabel, onAction }: Recomm
       </View>
       
       <TouchableOpacity 
-        style={[
-          styles.button, 
-          { backgroundColor: isActive ? theme.success : theme.background } 
-        ]} 
-        onPress={handlePress}
-        activeOpacity={0.7}
+        style={[styles.button, { backgroundColor: theme.background }]} 
+        onPress={onAction}
       >
-        <Text style={[
-          styles.buttonText, 
-          { color: isActive ? '#FFFFFF' : theme.text } 
-        ]}>
-          {isActive ? 'Ativo' : actionLabel} 
-        </Text>
+        <Text style={[styles.buttonText, { color: theme.text }]}>{actionLabel}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -103,14 +87,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     flex: 1,
     flexWrap: 'wrap',
-    fontWeight: '500',
   },
   button: {
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
-    minWidth: 80,
-    alignItems: 'center',
   },
   buttonText: {
     fontSize: 12,

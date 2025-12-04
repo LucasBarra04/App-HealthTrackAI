@@ -54,6 +54,7 @@ export default function HistoricoScreen() {
         
         <Text style={[styles.headerTitle, { color: theme.text }]}>Histórico</Text>
 
+        {/* Seleção de período */}
         <View style={styles.pillContainer}>
           {['7d', '30d', '90d'].map(range => (
             <TouchableOpacity
@@ -73,6 +74,7 @@ export default function HistoricoScreen() {
           ))}
         </View>
 
+        {/* Tabs de Métricas */}
         <View style={[styles.tabsContainer, { backgroundColor: theme.card }]}>
           {(['sono', 'agua', 'humor'] as MetricType[]).map(metric => (
             <TouchableOpacity
@@ -96,6 +98,7 @@ export default function HistoricoScreen() {
           ))}
         </View>
 
+        {/* Gráfico */}
         <View style={[styles.chartWrapper, { backgroundColor: theme.card }]}>
           {chartDataPoints.length > 0 ? (
             <LineChart
@@ -124,6 +127,7 @@ export default function HistoricoScreen() {
           )}
         </View>
 
+        {/* Estatísticas */}
         <View style={styles.statsRow}>
           <MetricCard
             title="Média"

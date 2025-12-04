@@ -1,13 +1,15 @@
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   ScrollView,
+  StyleSheet,
   Switch,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -46,11 +48,19 @@ function SettingsItem({ icon, label, value, onPress, right }: any) {
 
 export default function SettingsScreen() {
   const { isDark, toggleTheme, theme } = useTheme();
+  const router = useRouter();
+
+  // ✅ Função de Logout persistente
+  async function handleLogout() {
+    await AsyncStorage.setItem("@loggedIn", "false");
+    router.replace("/"); // volta para a tela de login
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-
+        
+        {/* PREFERÊNCIAS */}
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <SectionTitle>PREFERÊNCIAS</SectionTitle>
 
@@ -72,7 +82,11 @@ export default function SettingsScreen() {
             label="Notificações"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textSecondary}
+              />
             }
           />
 
@@ -81,11 +95,16 @@ export default function SettingsScreen() {
             label="Unidades"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textSecondary}
+              />
             }
           />
         </View>
 
+        {/* METAS */}
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <SectionTitle>METAS</SectionTitle>
 
@@ -95,7 +114,11 @@ export default function SettingsScreen() {
             value="8h"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textSecondary}
+              />
             }
           />
 
@@ -105,11 +128,16 @@ export default function SettingsScreen() {
             value="2.5L"
             onPress={() => {}}
             right={
-              <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textSecondary}
+              />
             }
           />
         </View>
 
+        {/* DADOS */}
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <SectionTitle>DADOS</SectionTitle>
 
@@ -117,7 +145,13 @@ export default function SettingsScreen() {
             icon="download-outline"
             label="Exportar Histórico"
             onPress={() => console.log("Exportar dados...")}
-            right={<Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />}
+            right={
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textSecondary}
+              />
+            }
           />
 
           <SettingsItem
@@ -125,6 +159,18 @@ export default function SettingsScreen() {
             label="Resetar Dados"
             onPress={() => console.log("Resetar dados...")}
             right={<Ionicons name="alert-circle-outline" size={20} color="#EF4444" />}
+          />
+        </View>
+
+        {/* SAIR — Logout */}
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
+          <SectionTitle>CONTA</SectionTitle>
+
+          <SettingsItem
+            icon="log-out-outline"
+            label="Sair"
+            onPress={handleLogout}
+            right={<Ionicons name="exit-outline" size={20} color="#EF4444" />}
           />
         </View>
 

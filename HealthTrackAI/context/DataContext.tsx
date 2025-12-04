@@ -1,4 +1,16 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  getDailyTip,
+  getWeeklyRecommendations,
+  WeeklyRecommendations,
+} from "../services/openaiService";
 
 export interface DailyRecord {
   date: string;
@@ -13,13 +25,15 @@ interface DataContextType {
   history: DailyRecord[];
   updateTodayData: (data: Partial<DailyRecord>) => void;
   saveData: () => void;
+
+  // IA
+  dailyTip: string | null;
+  weeklyTips: WeeklyRecommendations | null;
+  loadingTips: boolean;
+  refreshTips: () => void;
 }
 
 const INITIAL_HISTORY: DailyRecord[] = [
-  { date: '2025-12-04', sleep: 7.2, water: 2.4, mood: 3, activity: 'Yoga' },
-  { date: '2025-12-03', sleep: 6.8, water: 2.1, mood: 3, activity: 'Academia' },
-  { date: '2025-12-02', sleep: 8.0, water: 2.8, mood: 4, activity: 'Caminhada' },
-  { date: '2025-12-01', sleep: 7.5, water: 3.0, mood: 4, activity: 'Natação' },
   { date: '2025-11-30', sleep: 7.5, water: 2.5, mood: 4, activity: 'Caminhada' },
   { date: '2025-11-29', sleep: 8.0, water: 3.0, mood: 4, activity: 'Academia' },
   { date: '2025-11-28', sleep: 6.5, water: 2.0, mood: 3, activity: 'Yoga' },
@@ -50,105 +64,89 @@ const INITIAL_HISTORY: DailyRecord[] = [
   { date: '2025-11-03', sleep: 7.0, water: 2.5, mood: 3, activity: 'Academia' },
   { date: '2025-11-02', sleep: 9.0, water: 3.5, mood: 4, activity: 'Yoga' },
   { date: '2025-11-01', sleep: 5.8, water: 1.6, mood: 1, activity: '' },
-  { date: '2025-10-31', sleep: 7.5, water: 2.7, mood: 4, activity: 'Corrida' },
-  { date: '2025-10-30', sleep: 6.5, water: 2.2, mood: 3, activity: 'Natação' },
-  { date: '2025-10-29', sleep: 7.0, water: 2.5, mood: 3, activity: 'Caminhada' },
-  { date: '2025-10-28', sleep: 8.0, water: 3.0, mood: 4, activity: 'Academia' },
-  { date: '2025-10-27', sleep: 5.5, water: 1.4, mood: 0, activity: '' },
-  { date: '2025-10-26', sleep: 9.0, water: 3.2, mood: 4, activity: 'Yoga' },
-  { date: '2025-10-25', sleep: 8.5, water: 3.0, mood: 4, activity: 'Caminhada' },
-  { date: '2025-10-24', sleep: 6.0, water: 1.8, mood: 2, activity: 'Corrida' },
-  { date: '2025-10-23', sleep: 7.2, water: 2.4, mood: 3, activity: 'Natação' },
-  { date: '2025-10-22', sleep: 6.8, water: 2.0, mood: 2, activity: '' },
-  { date: '2025-10-21', sleep: 7.5, water: 2.6, mood: 4, activity: 'Academia' },
-  { date: '2025-10-20', sleep: 7.0, water: 2.5, mood: 3, activity: 'Yoga' },
-  { date: '2025-10-19', sleep: 8.0, water: 2.9, mood: 4, activity: 'Caminhada' },
-  { date: '2025-10-18', sleep: 6.5, water: 2.1, mood: 2, activity: '' },
-  { date: '2025-10-17', sleep: 5.8, water: 1.5, mood: 1, activity: 'Corrida' },
-  { date: '2025-10-16', sleep: 7.5, water: 2.8, mood: 4, activity: 'Natação' },
-  { date: '2025-10-15', sleep: 6.2, water: 1.9, mood: 2, activity: '' },
-  { date: '2025-10-14', sleep: 7.8, water: 2.7, mood: 4, activity: 'Academia' },
-  { date: '2025-10-13', sleep: 8.2, water: 3.1, mood: 4, activity: 'Yoga' },
-  { date: '2025-10-12', sleep: 9.0, water: 3.5, mood: 4, activity: 'Caminhada' },
-  { date: '2025-10-11', sleep: 5.5, water: 1.3, mood: 0, activity: '' },
-  { date: '2025-10-10', sleep: 6.5, water: 2.2, mood: 3, activity: 'Corrida' },
-  { date: '2025-10-09', sleep: 7.0, water: 2.5, mood: 3, activity: 'Natação' },
-  { date: '2025-10-08', sleep: 7.5, water: 2.8, mood: 4, activity: 'Academia' },
-  { date: '2025-10-07', sleep: 6.0, water: 1.8, mood: 2, activity: '' },
-  { date: '2025-10-06', sleep: 8.0, water: 3.0, mood: 4, activity: 'Yoga' },
-  { date: '2025-10-05', sleep: 7.2, water: 2.4, mood: 3, activity: 'Caminhada' },
-  { date: '2025-10-04', sleep: 6.8, water: 2.0, mood: 2, activity: 'Corrida' },
-  { date: '2025-10-03', sleep: 5.5, water: 1.5, mood: 1, activity: '' },
-  { date: '2025-10-02', sleep: 7.5, water: 2.6, mood: 4, activity: 'Natação' },
-  { date: '2025-10-01', sleep: 8.0, water: 3.2, mood: 4, activity: 'Academia' },
-  { date: '2025-09-30', sleep: 6.5, water: 2.1, mood: 3, activity: 'Yoga' },
-  { date: '2025-09-29', sleep: 7.0, water: 2.5, mood: 3, activity: 'Caminhada' },
-  { date: '2025-09-28', sleep: 8.5, water: 3.0, mood: 4, activity: '' },
-  { date: '2025-09-27', sleep: 5.0, water: 1.2, mood: 0, activity: 'Corrida' },
-  { date: '2025-09-26', sleep: 7.5, water: 2.8, mood: 4, activity: 'Natação' },
-  { date: '2025-09-25', sleep: 6.0, water: 1.8, mood: 2, activity: 'Academia' },
-  { date: '2025-09-24', sleep: 7.2, water: 2.4, mood: 3, activity: '' },
-  { date: '2025-09-23', sleep: 8.0, water: 3.1, mood: 4, activity: 'Yoga' },
-  { date: '2025-09-22', sleep: 6.8, water: 2.0, mood: 2, activity: 'Caminhada' },
-  { date: '2025-09-21', sleep: 9.0, water: 3.5, mood: 4, activity: 'Corrida' },
-  { date: '2025-09-20', sleep: 5.5, water: 1.5, mood: 1, activity: '' },
-  { date: '2025-09-19', sleep: 7.0, water: 2.3, mood: 3, activity: 'Natação' },
-  { date: '2025-09-18', sleep: 7.5, water: 2.7, mood: 4, activity: 'Academia' },
-  { date: '2025-09-17', sleep: 6.5, water: 2.0, mood: 2, activity: 'Yoga' },
-  { date: '2025-09-16', sleep: 6.0, water: 1.8, mood: 2, activity: '' },
-  { date: '2025-09-15', sleep: 8.0, water: 3.0, mood: 4, activity: 'Caminhada' },
-  { date: '2025-09-14', sleep: 7.2, water: 2.5, mood: 3, activity: 'Corrida' },
-  { date: '2025-09-13', sleep: 5.8, water: 1.6, mood: 1, activity: '' },
-  { date: '2025-09-12', sleep: 7.8, water: 2.9, mood: 4, activity: 'Natação' },
-  { date: '2025-09-11', sleep: 6.5, water: 2.1, mood: 2, activity: 'Academia' },
-  { date: '2025-09-10', sleep: 7.0, water: 2.4, mood: 3, activity: 'Yoga' },
-  { date: '2025-09-09', sleep: 8.5, water: 3.2, mood: 4, activity: 'Caminhada' },
-  { date: '2025-09-08', sleep: 5.5, water: 1.4, mood: 0, activity: '' },
-  { date: '2025-09-07', sleep: 9.0, water: 3.3, mood: 4, activity: 'Corrida' },
-  { date: '2025-09-06', sleep: 7.5, water: 2.8, mood: 3, activity: 'Natação' },
-  { date: '2025-09-05', sleep: 6.2, water: 1.9, mood: 2, activity: 'Academia' },
-  { date: '2025-09-04', sleep: 7.0, water: 2.5, mood: 3, activity: '' },
-  { date: '2025-09-03', sleep: 8.0, water: 3.0, mood: 4, activity: 'Yoga' },
-  { date: '2025-09-02', sleep: 6.8, water: 2.2, mood: 2, activity: 'Caminhada' },
 ];
 
 const DataContext = createContext<DataContextType>({} as DataContextType);
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getTodayStr = () => new Date().toISOString().split("T")[0];
 
   const [history, setHistory] = useState<DailyRecord[]>(INITIAL_HISTORY);
-  
+
   const [todayData, setTodayData] = useState<DailyRecord>({
     date: getTodayStr(),
     sleep: 0,
     water: 0,
     mood: null,
-    activity: '',
+    activity: "",
   });
 
+  const [dailyTip, setDailyTip] = useState<string | null>(null);
+  const [weeklyTips, setWeeklyTips] = useState<WeeklyRecommendations | null>(null);
+  const [loadingTips, setLoadingTips] = useState(false);
+
+  // Carrega dados do dia automaticamente
   useEffect(() => {
     const todayStr = getTodayStr();
-    const existingEntry = history.find(h => h.date === todayStr);
-    if (existingEntry) {
-      setTodayData(existingEntry);
-    }
-  }, []);
+    const existing = history.find((h) => h.date === todayStr);
+    if (existing) setTodayData(existing);
+  }, [history]);
 
-  const updateTodayData = (newData: Partial<DailyRecord>) => {
-    setTodayData(prev => ({ ...prev, ...newData }));
-  };
+  const updateTodayData = (newData: Partial<DailyRecord>) =>
+    setTodayData((prev) => ({ ...prev, ...newData }));
 
   const saveData = () => {
-    setHistory(prevHistory => {
+    setHistory((prev) => {
       const todayStr = getTodayStr();
-      const otherDays = prevHistory.filter(h => h.date !== todayStr);
-      return [todayData, ...otherDays];
+      const other = prev.filter((h) => h.date !== todayStr);
+      return [todayData, ...other];
     });
   };
 
+  // 🔥 IA INTEGRADA AQUI
+  async function refreshTips() {
+    try {
+      setLoadingTips(true);
+
+      const last7 = history.slice(0, 7);
+
+      const [dica, semana] = await Promise.all([
+        getDailyTip(todayData),            // IA analisa o dia atual
+        getWeeklyRecommendations(last7),   // IA analisa histórico
+      ]);
+
+      setDailyTip(dica);
+      setWeeklyTips(semana);
+
+    } catch (err) {
+      console.log("Erro ao carregar IA:", err);
+
+      // fallback elegante
+      setDailyTip("Mantenha a consistência! Grandes mudanças começam pequeno.");
+      setWeeklyTips({
+        sleep: "Procure manter horários fixos para dormir e acordar.",
+        water: "Hidrate-se ao longo do dia em pequenas doses.",
+        wellbeing: "Inclua pausas rápidas de bem-estar durante a semana."
+      });
+
+    } finally {
+      setLoadingTips(false);
+    }
+  }
+
   return (
-    <DataContext.Provider value={{ todayData, history, updateTodayData, saveData }}>
+    <DataContext.Provider
+      value={{
+        todayData,
+        history,
+        updateTodayData,
+        saveData,
+        dailyTip,
+        weeklyTips,
+        loadingTips,
+        refreshTips,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

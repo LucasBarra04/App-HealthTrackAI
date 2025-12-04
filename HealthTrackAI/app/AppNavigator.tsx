@@ -1,18 +1,18 @@
+import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import React, { useEffect } from 'react';
-import { Platform, View } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
-import { ThemeProvider, useTheme } from '../context/ThemeContext';
-import { DataProvider } from '../context/DataContext';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { BottomNavBar } from '../components/BottomNavBar';
-import { Ionicons } from '@expo/vector-icons';
+import { DataProvider } from '../context/DataContext';
+import { ThemeProvider, useTheme } from '../context/ThemeContext';
 
-import RecomendacoesIA from './(tabs)/RecomendacoesIA';
-import SettingsScreen from './(tabs)/SettingsScreen';
-import RegistroAtividades from './(tabs)/RegistroAtividades';
 import DashboardScreen from './(tabs)/DashboardScreen';
 import HistoricoScreen from './(tabs)/HistoricoScreen';
+import RecomendacoesIA from './(tabs)/RecomendaçõesIA';
+import RegistroAtividades from './(tabs)/RegistroAtividades';
+import SettingsScreen from './(tabs)/SettingsScreen';
 import AboutScreen from './AboutScreen';
 
 const Tab = createBottomTabNavigator();

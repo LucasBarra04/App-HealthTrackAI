@@ -1,26 +1,37 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-type AuthContextType = {
+interface AuthContextType {
   user: string | null;
-  signIn: (username: string) => void;
-  signOut: () => void;
-};
+  login: (name: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<string | null>(null);
 
-  const signIn = (username: string) => {
-    setUser(username);
-  };
+  useEffect(() => {
+    async function loadUser() {
+      const storedUser = await AsyncStorage.getItem("@user_name");
+      if (storedUser) setUser(storedUser);
+    }
+    loadUser();
+  }, []);
 
-  const signOut = () => {
+  async function login(name: string) {
+    setUser(name);
+    await AsyncStorage.setItem("@user_name", name);
+  }
+
+  async function logout() {
     setUser(null);
-  };
+    await AsyncStorage.removeItem("@user_name");
+  }
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
