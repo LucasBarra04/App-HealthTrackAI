@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
-export const BottomNavBar = ({ state, descriptors, navigation }) => {
+export const BottomNavBar = ({ state, descriptors, navigation }: any) => {
   const { theme } = useTheme();
 
   return (
@@ -11,7 +11,7 @@ export const BottomNavBar = ({ state, descriptors, navigation }) => {
       backgroundColor: theme.navBackground, 
       borderTopColor: theme.border 
     }]}>
-      {state.routes.map((route, index) => {
+      {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel !== undefined ? options.tabBarLabel : route.name;
         const isFocused = state.index === index;
@@ -40,6 +40,7 @@ export const BottomNavBar = ({ state, descriptors, navigation }) => {
             key={index}
             onPress={onPress}
             style={styles.tabButton}
+            activeOpacity={0.7}
           >
             {isMiddleButton ? (
               <View style={[styles.middleButtonContainer, { backgroundColor: theme.primary, shadowColor: theme.primary }]}>
@@ -64,8 +65,8 @@ export const BottomNavBar = ({ state, descriptors, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: Platform.OS === 'ios' ? 85 : 65,
-    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
+    height: Platform.OS === 'ios' ? 90 : 70, 
+    paddingBottom: Platform.OS === 'ios' ? 25 : 12,
     paddingTop: 10,
     borderTopWidth: 1,
     elevation: 10,
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    marginTop: 4,
+    marginTop: 6,
     fontWeight: '500',
   },
   middleButtonContainer: {
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 25,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,

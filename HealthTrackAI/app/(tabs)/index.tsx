@@ -12,36 +12,26 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from '../AppNavigator'; 
-
-const COLORS = {
-  primary: '#6366F1',
-  background: '#F9FAFB',
-  card: '#FFFFFF',
-  text: '#111827',
-  textSecondary: '#6B7280',
-  border: '#E5E7EB',
-  error: '#EF4444',
-};
+import { ThemeProvider, useTheme } from '../../context/ThemeContext';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  if (isAuthenticated) {
-    return (
-      <SafeAreaProvider>
-        <AppNavigator />
-      </SafeAreaProvider>
-    );
-  }
-
   return (
-    <SafeAreaProvider>
-      <LoginScreen onLoginSuccess={() => setIsAuthenticated(true)} />
-    </SafeAreaProvider>
+    <ThemeProvider>
+        <SafeAreaProvider>
+            {isAuthenticated ? (
+                <AppNavigator />
+            ) : (
+                <LoginScreen onLoginSuccess={() => setIsAuthenticated(true)} />
+            )}
+        </SafeAreaProvider>
+    </ThemeProvider>
   );
 }
 
 function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
+  const { theme, isDark } = useTheme();
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -67,27 +57,39 @@ function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
     >
-      <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
+      <StatusBar 
+        barStyle={isDark ? "light-content" : "dark-content"} 
+        backgroundColor={theme.background} 
+      />
       
-      <View style={styles.contentContainer}>
+      <View style={[styles.contentContainer, { backgroundColor: theme.card }]}>
         <View style={styles.header}>
-          <View style={styles.logoBox}>
-            <Ionicons name="fitness" size={40} color={COLORS.primary} />
+          <View style={[styles.logoBox, { backgroundColor: theme.primary + '20' }]}>
+            <Ionicons name="fitness" size={40} color={theme.primary} />
           </View>
-          <Text style={styles.title}>Bem-vindo</Text>
-          <Text style={styles.subtitle}>Faça login para continuar sua jornada</Text>
+          <Text style={[styles.title, { color: theme.text }]}>Bem-vindo</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+            Faça login para continuar sua jornada
+          </Text>
         </View>
 
         <View style={styles.form}>
           
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Usuário</Text>
+            <Text style={[styles.label, { color: theme.text }]}>Usuário</Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input, 
+                { 
+                  backgroundColor: theme.background, 
+                  borderColor: theme.border, 
+                  color: theme.text 
+                }
+              ]}
               placeholder="Digite seu nome"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={theme.textSecondary}
               value={user}
               onChangeText={setUser}
               autoCapitalize="none"
@@ -95,12 +97,18 @@ function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Senha</Text>
-            <View style={styles.passwordContainer}>
+            <Text style={[styles.label, { color: theme.text }]}>Senha</Text>
+            <View style={[
+              styles.passwordContainer, 
+              { 
+                backgroundColor: theme.background, 
+                borderColor: theme.border 
+              }
+            ]}>
               <TextInput
-                style={styles.passwordInput}
+                style={[styles.passwordInput, { color: theme.text }]}
                 placeholder="Digite sua senha"
-                placeholderTextColor={COLORS.textSecondary}
+                placeholderTextColor={theme.textSecondary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -109,7 +117,7 @@ function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
                 <Ionicons 
                   name={showPassword ? "eye-off" : "eye"} 
                   size={20} 
-                  color={COLORS.textSecondary} 
+                  color={theme.textSecondary} 
                 />
               </TouchableOpacity>
             </View>
@@ -117,13 +125,13 @@ function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
 
           {error ? (
             <View style={styles.errorContainer}>
-              <Ionicons name="alert-circle" size={16} color={COLORS.error} />
+              <Ionicons name="alert-circle" size={16} color="#EF4444" />
               <Text style={styles.errorText}>{error}</Text>
             </View>
           ) : null}
 
           <TouchableOpacity 
-            style={styles.button} 
+            style={[styles.button, { backgroundColor: theme.primary, shadowColor: theme.primary }]} 
             activeOpacity={0.8}
             onPress={handleLogin}
           >
@@ -139,13 +147,11 @@ function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
   contentContainer: {
     width: '90%',
-    backgroundColor: COLORS.card,
     borderRadius: 24,
     padding: 32,
     shadowColor: "#000",
@@ -161,7 +167,6 @@ const styles = StyleSheet.create({
   logoBox: {
     width: 64,
     height: 64,
-    backgroundColor: '#E0E7FF',
     borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
@@ -170,12 +175,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: COLORS.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     textAlign: 'center',
   },
   form: {
@@ -187,25 +190,19 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.text,
     marginBottom: 8,
     marginLeft: 4,
   },
   input: {
-    backgroundColor: '#F9FAFB',
     borderWidth: 1,
-    borderColor: COLORS.border,
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
-    color: COLORS.text,
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
     borderWidth: 1,
-    borderColor: COLORS.border,
     borderRadius: 12,
     paddingHorizontal: 16,
   },
@@ -213,7 +210,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
     fontSize: 16,
-    color: COLORS.text,
   },
   errorContainer: {
     flexDirection: 'row',
@@ -224,16 +220,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   errorText: {
-    color: COLORS.error,
+    color: '#EF4444',
     fontSize: 14,
     fontWeight: '500',
   },
   button: {
-    backgroundColor: COLORS.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
-    shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
