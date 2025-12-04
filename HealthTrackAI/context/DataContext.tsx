@@ -16,6 +16,10 @@ interface DataContextType {
 }
 
 const INITIAL_HISTORY: DailyRecord[] = [
+  { date: '2025-12-04', sleep: 7.2, water: 2.4, mood: 3, activity: 'Yoga' },
+  { date: '2025-12-03', sleep: 6.8, water: 2.1, mood: 3, activity: 'Academia' },
+  { date: '2025-12-02', sleep: 8.0, water: 2.8, mood: 4, activity: 'Caminhada' },
+  { date: '2025-12-01', sleep: 7.5, water: 3.0, mood: 4, activity: 'Natação' },
   { date: '2025-11-30', sleep: 7.5, water: 2.5, mood: 4, activity: 'Caminhada' },
   { date: '2025-11-29', sleep: 8.0, water: 3.0, mood: 4, activity: 'Academia' },
   { date: '2025-11-28', sleep: 6.5, water: 2.0, mood: 3, activity: 'Yoga' },
@@ -46,7 +50,6 @@ const INITIAL_HISTORY: DailyRecord[] = [
   { date: '2025-11-03', sleep: 7.0, water: 2.5, mood: 3, activity: 'Academia' },
   { date: '2025-11-02', sleep: 9.0, water: 3.5, mood: 4, activity: 'Yoga' },
   { date: '2025-11-01', sleep: 5.8, water: 1.6, mood: 1, activity: '' },
-
   { date: '2025-10-31', sleep: 7.5, water: 2.7, mood: 4, activity: 'Corrida' },
   { date: '2025-10-30', sleep: 6.5, water: 2.2, mood: 3, activity: 'Natação' },
   { date: '2025-10-29', sleep: 7.0, water: 2.5, mood: 3, activity: 'Caminhada' },
@@ -78,7 +81,6 @@ const INITIAL_HISTORY: DailyRecord[] = [
   { date: '2025-10-03', sleep: 5.5, water: 1.5, mood: 1, activity: '' },
   { date: '2025-10-02', sleep: 7.5, water: 2.6, mood: 4, activity: 'Natação' },
   { date: '2025-10-01', sleep: 8.0, water: 3.2, mood: 4, activity: 'Academia' },
-
   { date: '2025-09-30', sleep: 6.5, water: 2.1, mood: 3, activity: 'Yoga' },
   { date: '2025-09-29', sleep: 7.0, water: 2.5, mood: 3, activity: 'Caminhada' },
   { date: '2025-09-28', sleep: 8.5, water: 3.0, mood: 4, activity: '' },

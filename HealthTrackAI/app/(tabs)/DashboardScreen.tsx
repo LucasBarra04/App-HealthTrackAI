@@ -1,16 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CardResumo } from '../../components/CardResumo';
 import { useData } from '../../context/DataContext';
 import { useTheme } from '../../context/ThemeContext';
-
 import {
   gerarDicaDoDiaMock,
   gerarRecomendacoesSemanaMock
-} from "../service/chatgpt";
+} from "../service/chatgpt"; 
 
 const capitalizeFirstLetter = (string: string | null) => {
   if (!string) return 'Usuário';
@@ -28,25 +27,23 @@ const getFormattedDate = () => {
 };
 
 export default function DashboardScreen() {
-
   const { theme } = useTheme();
-
   const { todayData } = useData();
 
   const [userName, setUserName] = useState<string | null>(null);
-
   const [iaDailyTip, setIaDailyTip] = useState<string[]>([]);
   const [iaWeeklyText, setIaWeeklyText] = useState<string[]>([]);
   const [loadingIaTips, setLoadingIaTips] = useState(false);
-  async function handleRefreshAITips() {
-    try {
 
+  async function handleRefreshAITips() {
+    setLoadingIaTips(true);
+    try {
       const dicas = await gerarDicaDoDiaMock();
       const recomendacoes = await gerarRecomendacoesSemanaMock();
 
       setIaDailyTip(dicas);
       setIaWeeklyText(recomendacoes);
-
+    } catch (error) {
       console.error("Erro no mock de IA:", error);
     } finally {
       setLoadingIaTips(false);
@@ -64,7 +61,6 @@ export default function DashboardScreen() {
     }
     loadUser();
     handleRefreshAITips();
-
   }, []);
 
   const METAS = { sono: 8, agua: 2.5 };
@@ -83,6 +79,7 @@ export default function DashboardScreen() {
           <View>
             <Text style={[styles.greeting, { color: theme.text }]}>
               Olá, {capitalizeFirstLetter(userName)}!
+            </Text>
             <Text style={[styles.date, { color: theme.textSecondary }]}>
               {getFormattedDate()}
             </Text>
@@ -94,11 +91,34 @@ export default function DashboardScreen() {
         </View>
 
         <View style={styles.gridContainer}>
+          <CardResumo 
+            icon="moon" 
+            value={`${Number(todayData.sleep).toFixed(1)}h`} 
+            goal={`${METAS.sono}h`} 
             progress={todayData.sleep / METAS.sono} 
-          <CardResumo icon="moon" value={`${Number(todayData.sleep).toFixed(1)}h`} goal={`${METAS.sono}h`} progress={todayData.sleep / METAS.sono} color="#5C6BC0" />
-          <CardResumo icon="water" value={`${Number(todayData.water).toFixed(1)}L`} goal={`${METAS.agua}L`} progress={todayData.water / METAS.agua} color="#42A5F5" />
-          <CardResumo icon="happy" value={humorDisplay > 0 ? `${humorDisplay}/5` : '-'} goal="" progress={humorDisplay / 5} color="#FFB74D" />
-          <CardResumo icon='walk' value={temAtividade ? todayData.activity : 'Nenhuma'} goal={undefined} progress={temAtividade ? 1 : 0} color="#78909C" />
+            color="#5C6BC0" 
+          />
+          <CardResumo 
+            icon="water" 
+            value={`${Number(todayData.water).toFixed(1)}L`} 
+            goal={`${METAS.agua}L`} 
+            progress={todayData.water / METAS.agua} 
+            color="#42A5F5" 
+          />
+          <CardResumo 
+            icon="happy" 
+            value={humorDisplay > 0 ? `${humorDisplay}/5` : '-'} 
+            goal="" 
+            progress={humorDisplay / 5} 
+            color="#FFB74D" 
+          />
+          <CardResumo 
+            icon='walk' 
+            value={temAtividade ? todayData.activity : 'Nenhuma'} 
+            goal={undefined} 
+            progress={temAtividade ? 1 : 0} 
+            color="#78909C" 
+          />
         </View>
 
         <View style={[styles.tipWrapper, { backgroundColor: '#FDE68A' }]}>
@@ -107,6 +127,7 @@ export default function DashboardScreen() {
               Dica do Dia <Ionicons name="sparkles" size={16} color="#F59E0B" />
             </Text>
 
+            {loadingIaTips ? (
               <ActivityIndicator color="#92400E" size="small" />
             ) : iaDailyTip.length > 0 ? (
               iaDailyTip.map((msg, i) => (
@@ -135,7 +156,8 @@ export default function DashboardScreen() {
             Recomendações da Semana
           </Text>
 
-          {loadingIaTips && iaWeeklyText.length === 0 ? (
+          {loadingIaTips ? (
+            <ActivityIndicator size="small" color={theme.primary} />
           ) : iaWeeklyText.length > 0 ? (
             iaWeeklyText.map((msg, i) => (
               <Text key={i} style={[styles.weekItem, { color: theme.text }]}>
@@ -143,7 +165,7 @@ export default function DashboardScreen() {
               </Text>
             ))
           ) : (
-            <Text style={{ color: theme.textSecondary }}>Carregando...</Text>
+            <Text style={{ color: theme.textSecondary }}>Nenhuma recomendação disponível.</Text>
           )}
         </View>
 
@@ -201,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 4,
   },
-  tipContent: { flex: 1 },
+  tipContent: { flex: 1, paddingVertical: 15 },
   tipTitle: {
     fontSize: 15,
     fontWeight: 'bold',
